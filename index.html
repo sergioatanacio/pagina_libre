@@ -1,11 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <title>Conversión de texto enriquecido a HTML</title>
 </head>
 <body>
-    <h1>Hola mundo</h1>
+  <h2>Pegar texto enriquecido desde Word y convertirlo a HTML</h2>
+  <div>
+    <button onclick="convertToHtml()">Convertir a HTML</button>
+    <button onclick="copyToClipboard()">Copiar al portapapeles</button>
+  </div>
+  <div contenteditable="true" id="richTextEditor" style="border: 1px solid #ccc; padding: 10px;">
+    Pegue aquí el texto enriquecido copiado desde Word.
+  </div>
+  <textarea id="htmlOutput" rows="10" style="margin-top: 10px; width: 100%;"></textarea>
+
+  <script>
+    function convertToHtml() {
+      const richTextEditor = document.getElementById('richTextEditor');
+      const htmlOutput = document.getElementById('htmlOutput');
+
+      // Obtener el contenido enriquecido
+      const content = richTextEditor.innerHTML;
+
+      // Crear un elemento div temporal para realizar la conversión
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = content;
+
+      // Utilizar execCommand para convertir a texto enriquecido
+      document.execCommand('defaultParagraphSeparator', false, 'p');
+      document.execCommand('insertHTML', false, tempDiv.innerHTML);
+
+      // Obtener el contenido convertido a HTML enriquecido
+      const enrichedContent = richTextEditor.innerHTML;
+
+      // Mostrar el resultado en el área de texto
+      htmlOutput.value = enrichedContent;
+    }
+
+    function copyToClipboard() {
+      const htmlOutput = document.getElementById('htmlOutput');
+
+      // Seleccionar el contenido del área de texto
+      htmlOutput.select();
+      htmlOutput.setSelectionRange(0, 99999); // Para dispositivos móviles
+
+      // Copiar el contenido seleccionado al portapapeles
+      document.execCommand('copy');
+
+      // Deseleccionar el contenido
+      window.getSelection().removeAllRanges();
+    }
+  </script>
 </body>
 </html>
